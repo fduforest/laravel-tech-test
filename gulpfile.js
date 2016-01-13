@@ -13,4 +13,11 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix.sass('app.scss');
+
+    mix.scripts([
+        "menu.js",
+        "game.js",
+        "game_over.js",
+        "main.js",
+    ]);
 });
