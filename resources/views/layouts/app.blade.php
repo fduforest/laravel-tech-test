@@ -16,8 +16,6 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script>tinymce.init({ selector:'textarea' });</script>
     <style>
         body {
             font-family: 'Lato';
@@ -27,6 +25,8 @@
             margin-right: 6px;
         }
     </style>
+
+    @yield('head')
 </head>
 <body id="app-layout">
 <nav class="navbar navbar-default">
@@ -49,7 +49,6 @@
         </div>
 
         <div class="collapse navbar-collapse" id="spark-navbar-collapse">
-
 
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
@@ -74,6 +73,9 @@
                                 <a href="{{ url('/user/'.Auth::id()) }}">My Profile</a>
                             </li>
                             <li>
+                                <a href="{{ url('/snake') }}">Play Snake</a>
+                            </li>
+                            <li>
                                 <a href="{{ url('/logout') }}">Logout</a>
                             </li>
                         </ul>
@@ -89,7 +91,7 @@
     <!-- Display Validation Errors -->
     @include('common.errors')
 
-    <!-- Display messages -->
+            <!-- Display messages -->
     @include('common.messages')
 
     <div class="row">
@@ -101,17 +103,13 @@
         </div>
     </div>
 </div>
-</div>
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <p>Copyright © 2016 | Keynetic</p>
-    </div>
-</div>
-</div>
 
 <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/phaser/2.4.4/phaser.min.js"></script>
+<script>tinymce.init({selector: 'textarea'});</script>
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>

@@ -2,12 +2,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-use App\User;
 
 class ProfileController extends Controller {
+
+	public $user;
+
+	/**
+	 * ProfileController constructor.
+	 *
+	 */
+	public function __construct() {
+		$this->user = Auth::user();
+	}
 
 	/**
 	 * Get a validator for an incoming registration request.
@@ -16,10 +26,10 @@ class ProfileController extends Controller {
 	 *
 	 * @return \Illuminate\Contracts\Validation\Validator
 	 */
-	protected function validator(User $user, array $data ) {
+	protected function validator( array $data ) {
 		return Validator::make( $data, [
 			'name'     => 'required|max:255',
-			'email'    => 'required|email|max:255|unique:users,email,'.$user->id,
+			'email'    => 'required|email|max:255|unique:users,email,' . $this->user->id,
 			'password' => 'required|confirmed|min:6',
 		] );
 	}
@@ -29,13 +39,11 @@ class ProfileController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit()
-	{
-		if (Auth::user())
-		{
-			$user = Auth::user();
+	public function show() {
 
-			return view( 'admin.profile')->withUser( $user );
+		if ( $this->user ) {
+
+			return view( 'admin.profile' )->withUser( $this->user );
 		}
 	}
 
@@ -48,10 +56,9 @@ class ProfileController extends Controller {
 	 */
 	public function updateProfile( Request $request ) {
 
-		if ( Auth::user() ) {
-			$user = Auth::user();
+		if ( $this->user ) {
 
-			$validator = $this->validator($user, $request->all() );
+			$validator = $this->validator($request->all() );
 
 			if ( $validator->fails() ) {
 				$this->throwValidationException(
@@ -59,9 +66,9 @@ class ProfileController extends Controller {
 				);
 			}
 
-			$this->update($user, $request->all() );
+			$this->update( $request->all() );
 
-			return redirect( 'user/'.$user->id )->withMessage( 'Profile updated successfully' );
+			return redirect( 'user/' . $this->user->id )->withMessage( 'Profile updated successfully' );
 		} else {
 			return redirect( '/' )->withErrors( 'you have not sufficient permissions' );
 		}
@@ -72,14 +79,45 @@ class ProfileController extends Controller {
 	 *
 	 * @return view
 	 */
-	public function update(User $user, array $data ) {
+	public function update(array $data ) {
 
-			$user           = Auth::user();
-			$user->name     = $data['name'];
-			$user->email    = $data['email'];
-			$user->password = bcrypt( $data['password'] );
+		$this->user           = Auth::user();
+		$this->user->name     = $data['name'];
+		$this->user->email    = $data['email'];
+		$this->user->password = bcrypt( $data['password'] );
 
-			$user->save();
+		$this->user->save();
+	}
+
+	/**
+	 * Handle a profile update request.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getLastScore( Request $request ) {
+
+		$score = $request->all();
+
+		return redirect( 'user/' . $this->user->id )->withScore( $score );
+	}
+
+	/**
+	 * Handle a profile update request.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function updateScore( Request $request ) {
+
+		$data = $request->all();
+
+		$this->user->score = $data['score'];
+
+		$this->user->save();
+
 	}
 
 

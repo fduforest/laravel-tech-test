@@ -9,6 +9,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">My profile</div>
                 <div class="panel-body">
+                    <div>Best Snake score : {{ $user->score }}</div>
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/user/'.$user->id) }}">
                         {!! csrf_field() !!}
 
