@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +23,15 @@ Route::get('/', function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+Route::group(['middleware' => 'web'], function () {
+    Route::auth();
+
+    Route::get('/', function () {
+        return view('home');
+    });
+
+    // users profile
+    Route::get('user/{id}','ProfileController@edit')->where('id', '[0-9]+');
+    Route::post('user/{id}','ProfileController@updateProfile')->where('id', '[0-9]+');
+
 });
